@@ -56,17 +56,13 @@ function openRecaptcha(email){
 }
 
 function validateEmail(email) {
-    console.log(email);
     var re = /[^\s@]+@[^\s@]+\.[^\s@]+/;
-    console.log(re.test(email));
     return re.test(email);
 }
 
 
 function recaptchaVerify(response) {
-    console.log(response);
     var contactFormHost = 'http://splense-contact.herokuapp.com/';
-    //var contactFormHost = 'http://localhost:4567/';
     $.ajax({
         type: 'POST',
         url: contactFormHost + 'register_email',
