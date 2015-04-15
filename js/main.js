@@ -1,5 +1,9 @@
 $(window).load(function() {
-    $('section, footer').height($(window).height());
+    $('section:not(.noflex), footer').height($(window).height());
+    if($(window).width() > 1047){
+        $('section.noflex').height($(window).height());
+    }else
+        $('section.noflex').height($(window).height()*2);
     $(document).on('click', 'a[href^="#"]', function(e) {
 	    // target element id
 	    var id = $(this).attr('href');
@@ -20,14 +24,14 @@ $(window).load(function() {
 	    $('body, html').animate({scrollTop: pos});
 	});
 
-    $('div.cta input, div.footer-cta input').focus(function(){
+    $('div.header-cta input, div.footer-cta input').focus(function(){
     	$('div.error').hide();
     });
 
-    $('div.cta button').click(function() {
+    $('div.header-cta button').click(function() {
     	var email = $('div.cta input').val();
     	if(!openRecaptcha(email)){
-    		$('div.cta div.error').show();
+    		$('div.header-cta div.error').show();
     	}
     });
     $('div.footer-cta button').click(function() {

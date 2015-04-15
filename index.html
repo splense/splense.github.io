@@ -25,33 +25,31 @@
     <!--[if lt IE 8]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
-
-    <!-- Add your site or application content here -->
     <header>
         <nav>
-            <ul>
+            <ul class="hidden-xs">
             	<li><a href="#banner" class="uppercase">Home</a>
             	</li>
                 <li><a href="#contact" class="uppercase">Contact</a>
                 </li>
                 <li><a href="#process" class="uppercase">Process</a>
                 </li>
-            </ul>
+            </ul> 
         </nav>
     </header>
     <section id="banner">
         <div class="container">
             <div class="col-6 divider banner-intro">
                 <div class="col-12">
-                    <img src="img/logo.png" class="right" width="200px" />
+                    <img src="img/logo.png" class="right" />
                 </div>
                 <h2 class="uppercase text-right">Software is For People</h2>
                 <h3 class="uppercase text-right">Intuition. Reliability. Simplicity.</h3>
             </div>
-            <div class="col-6">
+            <div class="col-6 hidden-xs">
                 <div class="banner-form">
                     <h3 class="uppercase text-left">Looking for a software solution?</h3>
-                    <div class="cta">
+                    <div class="cta header-cta">
                         <input type="email" placeholder="Please enter your email address" class="line-input" id="email" />
                         <button>tell me more</button>
                         <div class="error">
@@ -60,6 +58,7 @@
                     </div>
                 </div>
             </div>
+            <a href="#process" class="nav bottom visible-xs">More</a>
         </div>
     </section>
     <section id="process">
@@ -75,8 +74,12 @@
                 <h3 class="uppercase">Experience</h3>
                 <p>Your target users need to find the software easy to use, and naturally focus on what you’re providing. <br>So, we at Splense make sure to understand your target users before building the user story and experience.<br>This means, we make it simple and intuitive.</p>
             </div>
+            <a href="#interface" class="nav bottom visible-xs">Interface</a>
+
         </div>
-        <div class="process-item text-center green-dark">
+        <div class="process-item text-center green-dark" id="interface">
+                <a href="#experience" class="nav top visible-xs">Experience</a>
+
             <div>
                 <h3 class="uppercase">Interface</h3>
                 <p>Your users need to find what you are providing without being distracted. <br>So, we design an interface which blends into the background and at the same time, enhances the visuals of the software.</p>
@@ -86,13 +89,16 @@
     </section>
     <section class="noflex">
         <div class="process-item text-center blue-dark" id="dev">
-        <a href="#experience" class="nav top">Experience</a>
+        <a href="#experience" class="nav top hidden-xs">Experience</a>
+        <a href="#interface" class="nav top visible-xs">Interface</a>
             <div>
                 <h3 class="uppercase">Development</h3>
                 <p>It’s your software, you will need to know the how, what, why and when of the development. <br>So, the development is a transparent process, with constant feedback from you. We don’t believe in hierarchy at Splense. <br>Your queries are answered instantly with just a call to anyone here.</p>
             </div>
+        <a href="#support" class="nav bottom visible-xs">Support</a>
         </div>
-        <div class="process-item text-center red-dark">
+        <div class="process-item text-center red-dark" id="support">
+            <a href="#experience" class="nav top visible-xs">Development</a>
             <div>
                 <h3 class="uppercase">Support</h3>
                 <p>Our relationship does not end with development, in fact, we love support at Splense. <br>We see it as having your unique identity imprint itself on the solution. <br>After all, it is your solution.</p>
@@ -107,8 +113,10 @@
                 </p>
                 <p class="text-right uppercase">Always eager to hear from you</p>
             </div>
-            <img class="hidden-xs col-4" src="img/hexagons.png" />
-            <div class="col-4">
+            <div class="col-4 hidden-xs img-container">
+                <img src="img/hexagons.png" />
+            </div>
+            <div class="col-4 footer-info">
             	<p class="uppercase">Need More Information?</p>
             	<div class="cta footer-cta">
                     <input type="email" placeholder="Please enter your email address" class="line-input" id="email" />
