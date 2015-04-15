@@ -38,7 +38,7 @@ $(window).load(function() {
     });
 });
 
-function openRecaptcha(){
+function openRecaptcha(email){
 	if(validateEmail(email)){
         vex.open({
             content: '<div id="recaptcha"></div>',
@@ -56,7 +56,9 @@ function openRecaptcha(){
 }
 
 function validateEmail(email) {
-    var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+    console.log(email);
+    var re = /[^\s@]+@[^\s@]+\.[^\s@]+/;
+    console.log(re.test(email));
     return re.test(email);
 }
 
