@@ -277,3 +277,11 @@ textarea {
         page-break-after: avoid;
     }
 }
+
+section, footer {
+    min-height: 500px;
+    height: 100vh;
+}
+header nav ul li a {
+    font-size: 1.2rem;
+}

@@ -1,9 +1,4 @@
 $(window).load(function() {
-    $('section:not(.noflex), footer').height($(window).height());
-    if($(window).width() > 1047){
-        $('section.noflex').height($(window).height());
-    }else
-        $('section.noflex').height($(window).height()*2);
     $(document).on('click', 'a[href^="#"]', function(e) {
 	    // target element id
 	    var id = $(this).attr('href');
