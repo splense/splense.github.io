@@ -61,14 +61,21 @@ function validateEmail(email) {
 
 
 function recaptchaVerify(response) {
-    var contactFormHost = 'http://splense-contact.herokuapp.com/';
+    var contactFormHost = 'https://splense-contact.herokuapp.com/';
+    var footerEmailValue = $('div.footer-cta input').val();
+    var headerEmailValue = $('div.cta input').val();
+    var email = headerEmailValue;
+    if (!headerEmailValue.trim()) {
+        email = footerEmailValue;
+    }
     $.ajax({
         type: 'POST',
         url: contactFormHost + 'register_email',
-        data: {
-            email: $('div.cta input').val(),
+        contentType: 'application/json',
+        data: JSON.stringify({
+            email: email,
             recaptcha_response: response
-        },
+        }),
         dataType: 'json',
         success: function(response) {
             switch (response.message) {
