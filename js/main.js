@@ -1,99 +1,94 @@
-$(window).load(function() {
-    $(document).on('click', 'a[href^="#"]', function(e) {
-	    // target element id
-	    var id = $(this).attr('href');
+$(window).load(function () {
 
-	    // target element
-	    var $id = $(id);
-	    if ($id.length === 0) {
-	        return;
-	    }
-
-	    // prevent standard hash navigation (avoid blinking in IE)
-	    e.preventDefault();
-
-	    // top position relative to the document
-	    var pos = $(id).offset().top;
-
-	    // animated top scrolling
-	    $('body, html').animate({scrollTop: pos});
-	});
-
-    $('div.header-cta input, div.footer-cta input').focus(function(){
-    	$('div.error').hide();
+    // Animate scrolling sections
+    $(document).on('click', 'a[href^="#"]', function (e) {
+        // target element id
+        var id = $(this).attr('href');
+        // target element
+        var $id = $(id);
+        if ($id.length === 0) {
+            return;
+        }
+        // prevent standard hash navigation (avoid blinking in IE)
+        e.preventDefault();
+        // top position relative to the document
+        var pos = $(id).offset().top;
+        // animated top scrolling
+        $('body, html').animate({ scrollTop: pos });
     });
 
-    $('div.header-cta button').click(function() {
-    	var email = $('div.cta input').val();
-    	if(!openRecaptcha(email)){
-    		$('div.header-cta div.error').show();
-    	}
+    // Hide errors when input is focused
+    $('div.header-cta input, div.footer-cta input').focus(function () {
+        $('div.error').hide();
     });
-    $('div.footer-cta button').click(function() {
-    	var email = $('div.footer-cta input').val();
-    	if(!openRecaptcha(email)){
-    		$('div.footer-cta div.error').show();
-    	}
-    });
+
+    // Register email from Header
+    const headerCTAHandler = CTAonClick.bind(this, "div.header-cta");
+    $('div.header-cta button').click(headerCTAHandler);
+
+    // Register email from footer
+    const footerCTAHandler = CTAonClick.bind(this, "div.footer-cta");
+    $('div.footer-cta button').click(footerCTAHandler);
 });
 
-function openRecaptcha(email){
-	if(validateEmail(email)){
-        vex.open({
-            content: '<div id="recaptcha"></div>',
-            afterOpen: function($vexContent) {
-                grecaptcha.render('recaptcha', {
-                    'sitekey': '6LecVAUTAAAAAGgaNGZ1SiXbU6WvCGkcEQUZrrFk',
-                    'callback': recaptchaVerify
+
+function CTAonClick(ctaSelector, e) {
+    e.preventDefault();
+
+    const inputselector = `${ctaSelector} input`;
+    const errorElementSelector = `${ctaSelector} div.error`;
+
+    grecaptcha.ready(function () {
+        grecaptcha.execute('6LctwKAeAAAAAKO9szhKeJmCCvPPcXguJ11EumRg', { action: 'submit' }).then(function (token) {
+            const email = document.querySelector(inputselector).value.trim();
+            const re = /[^\s@]+@[^\s@]+\.[^\s@]+/;
+            const isEmailValid = re.test(email.trim());
+
+            if (isEmailValid) {
+                recaptchaVerify(token, email.trim()).then((result) => {
+                    if (result.status === Status.SUCCESS) {
+                        // Success Code!
+                    }
+                    if (result.status === Status.FAILURE) {
+                        console.log("Email Registration Failed", { message: result.message })
+                    }
                 });
-            },
-            className: 'vex-theme-bottom-right-corner'
-        });
-        return true;
-	}else
-		return false;
-}
-
-function validateEmail(email) {
-    var re = /[^\s@]+@[^\s@]+\.[^\s@]+/;
-    return re.test(email);
-}
-
-
-function recaptchaVerify(response) {
-    var contactFormHost = 'https://splense-contact.herokuapp.com/';
-    var footerEmailValue = $('div.footer-cta input').val();
-    var headerEmailValue = $('div.cta input').val();
-    var email = headerEmailValue;
-    if (!headerEmailValue.trim()) {
-        email = footerEmailValue;
-    }
-    $.ajax({
-        type: 'POST',
-        url: contactFormHost + 'register_email',
-        contentType: 'application/json',
-        data: JSON.stringify({
-            email: email,
-            recaptcha_response: response
-        }),
-        dataType: 'json',
-        success: function(response) {
-            switch (response.message) {
-                case 'success':
-                    vex.close();
-                    break;
-
-                case 'failure_captcha':
-                	alert("recaptcha failed");
-                    break;
-
-                case 'failure_email':
-                	alert("failed to send email");
-                	break;
+            } else {
+                $(errorElementSelector).show();
             }
-        },
-        error: function(xhr, ajaxOptions, thrownError) {
-        	console.log(thrownError);
-        }
+        })
+    })
+}
+
+
+const Status = {
+    SUCCESS: "success",
+    FAILURE: "failure",
+}
+
+function recaptchaVerify(token, email) {
+    const requestURL = 'https://splense-contact.herokuapp.com/register_email';
+    const request = new Request(requestURL, {
+        method: 'POST', body: JSON.stringify({
+            email,
+            token
+        })
     });
+    return fetch(request)
+        .then(response => {
+            if (response.status === 200) {
+                return response.json();
+            } else {
+                return { status: Status.FAILURE, message: "Incorrect Response" }
+            }
+        })
+        .then(response => {
+            if(response.status === Status.SUCCESS){
+                return { status: Status.SUCCESS, message: response.message };
+            } else {
+                throw Error(response.message);
+            }
+        }).catch(error => {
+            return { status: Status.FAILURE, message: `${error.message}` }
+        });
 }
