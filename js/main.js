@@ -20,6 +20,7 @@ $(window).load(function () {
     // Hide errors when input is focused
     $('div.header-cta input, div.footer-cta input').focus(function () {
         $('div.error').hide();
+        $('div.success').hide();
     });
 
     // Register email from Header
@@ -31,31 +32,48 @@ $(window).load(function () {
     $('div.footer-cta button').click(footerCTAHandler);
 });
 
+function showLoadingButton(selector) {
+    $(selector).text('');
+    $(selector).addClass('button--loading');
+    $(selector).attr('disabled', true);
+}
+
+function showNormalButton(selector) {
+    $(selector).text('tell me more');
+    $(selector).removeClass('button--loading');
+    $(selector).attr('disabled', false);
+}
+
 
 function CTAonClick(ctaSelector, e) {
     e.preventDefault();
 
     const inputselector = `${ctaSelector} input`;
     const errorElementSelector = `${ctaSelector} div.error`;
+    const successElementSelector = `${ctaSelector} div.success`;
+    const buttonSelector = `${ctaSelector} button`;
+
+    const email = document.querySelector(inputselector).value.trim();
+    const re = /[^\s@]+@[^\s@]+\.[^\s@]+/;
+    const isEmailValid = re.test(email.trim());
+
+    if (!isEmailValid) {
+        $(errorElementSelector).show();
+        return;
+    }
+    showLoadingButton(buttonSelector);
 
     grecaptcha.ready(function () {
         grecaptcha.execute('6LctwKAeAAAAAKO9szhKeJmCCvPPcXguJ11EumRg', { action: 'submit' }).then(function (token) {
-            const email = document.querySelector(inputselector).value.trim();
-            const re = /[^\s@]+@[^\s@]+\.[^\s@]+/;
-            const isEmailValid = re.test(email.trim());
-
-            if (isEmailValid) {
-                recaptchaVerify(token, email.trim()).then((result) => {
-                    if (result.status === Status.SUCCESS) {
-                        // Success Code!
-                    }
-                    if (result.status === Status.FAILURE) {
-                        console.log("Email Registration Failed", { message: result.message })
-                    }
-                });
-            } else {
-                $(errorElementSelector).show();
-            }
+            recaptchaVerify(token, email.trim()).then((result) => {
+                if (result.status === Status.SUCCESS) {
+                    $(successElementSelector).show();
+                }
+                if (result.status === Status.FAILURE) {
+                    console.log("Email Registration Failed", { message: result.message })
+                }
+                showNormalButton(buttonSelector);
+            });
         })
     })
 }
@@ -83,7 +101,7 @@ function recaptchaVerify(token, email) {
             }
         })
         .then(response => {
-            if(response.status === Status.SUCCESS){
+            if (response.status === Status.SUCCESS) {
                 return { status: Status.SUCCESS, message: response.message };
             } else {
                 throw Error(response.message);
