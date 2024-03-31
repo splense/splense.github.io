@@ -88,7 +88,7 @@ const Status = {
 };
 
 function recaptchaVerify(token, email) {
-  const requestURL = "http://192.168.1.97:8000/register_email";
+  const requestURL = "https://contact.splense.com/register_email";
   const headers = new Headers();
   headers.append("Content-Type", "application/json");
   const request = new Request(requestURL, {
@@ -119,4 +119,3 @@ function recaptchaVerify(token, email) {
       return { status: Status.FAILURE, message: `${error.message}` };
     });
 }
-
