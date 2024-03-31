@@ -1,4 +1,4 @@
-$(window).load(function () {
+$(function () {
   // Animate scrolling sections
   $(document).on("click", 'a[href^="#"]', function (e) {
     // target element id
